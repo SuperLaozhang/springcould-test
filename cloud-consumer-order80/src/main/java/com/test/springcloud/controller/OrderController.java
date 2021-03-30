@@ -2,13 +2,19 @@ package com.test.springcloud.controller;
 
 import com.test.springcloud.entities.ConmonResult;
 import com.test.springcloud.entities.Payment;
+import com.test.springcloud.lb.LoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * Company： NanJing xinwang Technology Co.,Ltd
@@ -33,6 +39,10 @@ public class OrderController {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private LoadBalancer loadBalancer;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     @GetMapping(value = "/consumer/payment/create")
     public ConmonResult<Payment> create(Payment payment){
@@ -53,6 +63,17 @@ public class OrderController {
         }else{
             return new ConmonResult<>(444,"操作失败");
         }
+    }
+
+    @GetMapping(value = "/consumer/payment/lb")
+    public String getPayment3(){
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        if(instances == null || instances.size() <= 0){
+            return null;
+        }
+        ServiceInstance serviceInstance = loadBalancer.instance(instances);
+        URI url = serviceInstance.getUri();
+        return restTemplate.getForObject(url+"/payment/lb",String.class);
     }
 
 }

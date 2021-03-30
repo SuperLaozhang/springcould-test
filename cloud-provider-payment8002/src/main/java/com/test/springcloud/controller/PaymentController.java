@@ -62,4 +62,9 @@ public class PaymentController {
     public String index(){
        return "index";
     }
+
+    @GetMapping(value = "/payment/lb")
+    public String getPaymentLB(){
+        return serverPort;
+    }
 }

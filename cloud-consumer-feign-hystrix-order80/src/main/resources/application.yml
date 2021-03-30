@@ -1,0 +1,21 @@
+server:
+  port: 80
+
+eureka:
+  client:
+    #表示是否将自己注册进eurekaService服务器，默认为true
+    register-with-eureka: false
+    service-url:
+      #defaultZone: http://localhost:7001/eureka 单机版
+      defaultZone: http://eureka7001.com:7001/eureka
+#设置feign客户端超时时间（openFeign默认支持ribbon）
+ribbon:
+  #指的是建立连接所用的时间，适用于网络状况正常的情况下，两段连接所用的时间
+  ReadTimeout: 5000
+  #指的是建立连接后从服务器读到可用资源的所用时间
+  ConnectTimeout: 5000
+
+#设置让feign支持hystrix机制
+feign:
+  hystrix:
+    enabled: true

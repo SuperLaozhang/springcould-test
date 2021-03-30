@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloud-eureka-service</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>cloud-eureka-server7001</artifactId>
 
     <dependencies>
         <!-- 引入自定义api通用包 -->
